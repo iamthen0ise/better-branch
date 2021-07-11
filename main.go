@@ -39,18 +39,24 @@ func colorize(t *string, c string) string {
 
 }
 
+type ParsedArgs struct {
+	issueID    string
+	customText string
+}
+
+func (p *ParsedArgs) parseRawInput(t string) {
+	var matches []string = RE.FindAllString(t, -1)
+	if len(matches) > 0 {
+		p.issueID = matches[0]
+	} else {
+		p.customText = t
+	}
+}
+
 type BranchArgs struct {
 	issueID    string
 	customText string
 	value      string
-}
-
-func parseIssueId(t string) string {
-	var matches []string = RE.FindAllString(t, -1)
-	if len(matches) > 0 {
-		return matches[0]
-	}
-	return ""
 }
 
 func (b *BranchArgs) updateValue() {
@@ -98,21 +104,23 @@ func executeGitCommand(branchName string, checkout bool) error {
 func main() {
 	var branchArgs = BranchArgs{}
 
-	var issueID string
-	var customText string
+	var issue string
+	var ct string
 
 	var withCheckout bool = true
 
-	flag.StringVar(&issueID, "i", "", "JIRA Link or issue")
-	flag.StringVar(&customText, "t", "", "Custom Issue Text")
+	flag.StringVar(&issue, "i", "", "JIRA Link or issue")
+	flag.StringVar(&ct, "t", "", "Custom Issue Text")
 	flag.BoolVar(&withCheckout, "c", true, "Checkout to new branch (default `true`")
 
 	flag.Parse()
 
-	if len(os.Args[1:]) < 1 {
-		scanBranch := bufio.NewScanner(os.Stdin)
+	var parsedArgs = ParsedArgs{}
 
-		var promptDefault string = "Enter JIRA Issue link or some text. \nPress Enter once to submit or twice when ready > "
+	if len(os.Args[1:]) < 1 {
+		inputScanner := bufio.NewScanner(os.Stdin)
+
+		var promptDefault string = "Enter JIRA Issue link or some text. Press Enter once to submit or twice when ready > "
 		var promptCurrentLine *string = &branchArgs.value
 
 		fmt.Print(SAVE_POSITION)
@@ -126,33 +134,40 @@ func main() {
 				fmt.Print(colorize(&promptDefault, YELLOW), " ")
 			}
 
-			scanBranch.Scan()
-			text := scanBranch.Text()
-			matchedText := parseIssueId(text)
+			inputScanner.Scan()
+			text := inputScanner.Text()
+			parsedArgs.parseRawInput(text)
 
-			if matchedText != "" {
-				issueID = matchedText
-			} else if len(text) > 0 {
-				customText = text
-			} else {
+			if parsedArgs.issueID == "" && len(text) > 0 {
+				parsedArgs.customText = text
+			} else if len(text) == 0 {
 				break
 			}
 
-			branchArgs.updateFields(issueID, customText)
+			fmt.Print(parsedArgs.issueID)
+
+			branchArgs.updateFields(parsedArgs.issueID, parsedArgs.customText)
 		}
 	} else {
-		matchedText := parseIssueId(flag.Arg(0))
+		parsedArgs.parseRawInput(issue)
 
-		if matchedText != "" {
-			customText := strings.Join(flag.Args()[1:], "-")
-			branchArgs.updateFields(matchedText, customText)
-		} else {
-			branchArgs.updateFields(branchArgs.issueID, customText)
+		if len(parsedArgs.issueID) < 1 {
+			parsedArgs.parseRawInput(flag.Arg(0))
 		}
 
+		if len(parsedArgs.customText) < 1 {
+			parsedArgs.customText = ct
+		}
+
+		if flag.NArg() > 0 {
+			parsedArgs.customText = parsedArgs.customText + " " + strings.Join(flag.Args()[1:], " ")
+		}
+
+		branchArgs.updateFields(parsedArgs.issueID, parsedArgs.customText)
 	}
 
-	fmt.Println("Your branch name is:", colorize(&branchArgs.value, MAGENTA), "Do you want to continue and create branch? [y/N]")
+	fmt.Println("Your branch name is:", colorize(&branchArgs.value, MAGENTA))
+	fmt.Println("Do you want to continue and create branch? [y/N]")
 
 	scannerCreateBranch := bufio.NewScanner(os.Stdin)
 	scannerCreateBranch.Scan()
