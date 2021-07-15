@@ -6,7 +6,8 @@ Interactive CLI helper for creating git branches with JIRA Links and some text
 Yes
 
 ## How it works?
-![Enter JIRA link and/or text, then create a new branch from it](https://media.giphy.com/media/NQv6zWbeJnULd7DaGm/giphy.gif)
+<!-- ![Enter JIRA link and/or text, then create a new branch from it](https://media.giphy.com/media/ji7D1GBEFgQRQE0oHM/giphy.gif) -->
+[![asciicast](https://asciinema.org/a/ML4G0PjXdZZSlPfV4Ow1e0P5l.svg)](https://asciinema.org/a/ML4G0PjXdZZSlPfV4Ow1e0P5l)
 
 There are multiple ways to create branch name with Jira and/or text description.
 Currenly new branch is checkouted after creation by default.
