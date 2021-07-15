@@ -144,8 +144,6 @@ func main() {
 				break
 			}
 
-			fmt.Print(parsedArgs.issueID)
-
 			branchArgs.updateFields(parsedArgs.issueID, parsedArgs.customText)
 		}
 	} else {
@@ -167,13 +165,13 @@ func main() {
 	}
 
 	fmt.Println("Your branch name is:", colorize(&branchArgs.value, MAGENTA))
-	fmt.Println("Do you want to continue and create branch? [y/N]")
+	fmt.Println("Do you want to continue and create branch? [Enter to continue]")
 
 	scannerCreateBranch := bufio.NewScanner(os.Stdin)
 	scannerCreateBranch.Scan()
 
 	switch strings.ToLower(scannerCreateBranch.Text()) {
-	case "y":
+	case "":
 		err := branchArgs.createBranch(withCheckout)
 		if err != nil {
 			fmt.Print("Something went wrong,", err.Error())
