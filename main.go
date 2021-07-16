@@ -40,20 +40,27 @@ func colorize(t *string, c string) string {
 }
 
 type ParsedArgs struct {
+	prefix     string
 	issueID    string
 	customText string
 }
 
-func (p *ParsedArgs) parseRawInput(t string) {
-	var matches []string = RE.FindAllString(t, -1)
+func (p *ParsedArgs) parseRawInput(t *string) {
+	var matches []string = RE.FindAllString(strings.ToUpper(*t), -1)
 	if len(matches) > 0 {
 		p.issueID = matches[0]
+	} else if *t == "f" {
+		p.prefix = "feature"
+	} else if *t == "h" {
+		p.prefix = "hotfix"
+
 	} else {
-		p.customText = t
+		p.customText = *t
 	}
 }
 
 type BranchArgs struct {
+	prefix     string
 	issueID    string
 	customText string
 	value      string
@@ -61,6 +68,10 @@ type BranchArgs struct {
 
 func (b *BranchArgs) updateValue() {
 	var sb strings.Builder
+	if len(b.prefix) > 0 {
+		sb.WriteString(b.prefix)
+		sb.WriteString("/")
+	}
 
 	sb.WriteString(b.issueID)
 	if len(b.issueID) > 0 && len(b.customText) > 0 {
@@ -71,7 +82,8 @@ func (b *BranchArgs) updateValue() {
 	b.value = sb.String()
 }
 
-func (b *BranchArgs) updateFields(i string, t string) {
+func (b *BranchArgs) updateFields(p string, i string, t string) {
+	b.prefix = p
 	b.issueID = i
 	b.customText = t
 	b.updateValue()
@@ -102,20 +114,28 @@ func executeGitCommand(branchName string, checkout bool) error {
 }
 
 func main() {
-	var branchArgs = BranchArgs{}
+	var (
+		branchArgs = BranchArgs{}
 
-	var issue string
-	var ct string
+		issue  string
+		ct     string
+		prefix string
 
-	var withCheckout bool = true
+		feature string
+		hotfix  string
+
+		withCheckout bool = true
+	)
 
 	flag.StringVar(&issue, "i", "", "JIRA Link or issue")
 	flag.StringVar(&ct, "t", "", "Custom Issue Text")
+	flag.StringVar(&feature, "f", "", "set `feature` prefix")
+	flag.StringVar(&hotfix, "h", "", "set `hotfix` prefix")
 	flag.BoolVar(&withCheckout, "c", true, "Checkout to new branch (default `true`")
 
 	flag.Parse()
 
-	var parsedArgs = ParsedArgs{}
+	var pargs = ParsedArgs{}
 
 	if len(os.Args[1:]) < 1 {
 		inputScanner := bufio.NewScanner(os.Stdin)
@@ -136,32 +156,42 @@ func main() {
 
 			inputScanner.Scan()
 			text := inputScanner.Text()
-			parsedArgs.parseRawInput(text)
+			pargs.parseRawInput(&text)
 
-			if parsedArgs.issueID == "" && len(text) > 0 {
-				parsedArgs.customText = text
+			if pargs.issueID == "" && len(text) > 1 {
+				pargs.customText = text
+			} else if strings.ContainsAny(text, "fh") {
+				pargs.customText = ""
 			} else if len(text) == 0 {
 				break
 			}
-
-			branchArgs.updateFields(parsedArgs.issueID, parsedArgs.customText)
+			branchArgs.updateFields(pargs.prefix, pargs.issueID, pargs.customText)
 		}
 	} else {
-		parsedArgs.parseRawInput(issue)
+		pargs.parseRawInput(&issue)
 
-		if len(parsedArgs.issueID) < 1 {
-			parsedArgs.parseRawInput(flag.Arg(0))
+		if len(pargs.issueID) < 1 {
+			var arg = flag.Arg(0)
+			pargs.parseRawInput(&arg)
 		}
 
-		if len(parsedArgs.customText) < 1 {
-			parsedArgs.customText = ct
+		if prefix != "" {
+			pargs.prefix = prefix
+		} else if feature != "" {
+			pargs.prefix = "feature"
+		} else if hotfix != "" {
+			pargs.prefix = "hotfix"
+		}
+
+		if len(pargs.customText) < 1 {
+			pargs.customText = ct
 		}
 
 		if flag.NArg() > 0 {
-			parsedArgs.customText = parsedArgs.customText + " " + strings.Join(flag.Args()[1:], " ")
+			pargs.customText = pargs.customText + " " + strings.Join(flag.Args()[1:], " ")
 		}
 
-		branchArgs.updateFields(parsedArgs.issueID, parsedArgs.customText)
+		branchArgs.updateFields(pargs.prefix, pargs.issueID, pargs.customText)
 	}
 
 	fmt.Println("Your branch name is:", colorize(&branchArgs.value, MAGENTA))
