@@ -77,7 +77,7 @@ func (b *BranchArgs) updateValue() {
 	if len(b.issueID) > 0 && len(b.customText) > 0 {
 		sb.WriteString("-")
 	}
-	sb.WriteString(strings.Join(strings.Fields(b.customText), "-"))
+	sb.WriteString(strings.ToLower(strings.Join(strings.Fields(b.customText), "-")))
 
 	b.value = sb.String()
 }
