@@ -5,9 +5,7 @@ Interactive CLI helper for creating git branches with JIRA Links and some text
 Yes
 
 ## How it works?
-<!-- ![Enter JIRA link and/or text, then create a new branch from it](https://media.giphy.com/media/ji7D1GBEFgQRQE0oHM/giphy.gif) -->
-[![asciicast](https://asciinema.org/a/ML4G0PjXdZZSlPfV4Ow1e0P5l.svg)](https://asciinema.org/a/ML4G0PjXdZZSlPfV4Ow1e0P5l)
-
+[![asciicast](https://asciinema.org/a/d4NPyH679pdgjJVfLQpV4SOf7.svg)](https://asciinema.org/a/d4NPyH679pdgjJVfLQpV4SOf7)
 This tiny utility was made when i completely bored of creating JIRA branches on Web interface and pulling it to local.
 
 Just call `bb`, then Enter JIRA link and/or text, then create a new branch from.
