@@ -1,22 +1,25 @@
-# better-branch
+# bb (better-branch)
 Interactive CLI helper for creating git branches with JIRA Links and some text
 
-## Is this a buggy beta?
-
+## Still in development?
 Yes
 
 ## How it works?
-<!-- ![Enter JIRA link and/or text, then create a new branch from it](https://media.giphy.com/media/ji7D1GBEFgQRQE0oHM/giphy.gif) -->
-[![asciicast](https://asciinema.org/a/ML4G0PjXdZZSlPfV4Ow1e0P5l.svg)](https://asciinema.org/a/ML4G0PjXdZZSlPfV4Ow1e0P5l)
+[![asciicast](https://asciinema.org/a/d4NPyH679pdgjJVfLQpV4SOf7.svg)](https://asciinema.org/a/d4NPyH679pdgjJVfLQpV4SOf7)
+This tiny utility was made when i completely bored of creating JIRA branches on Web interface and pulling it to local.
+
+Just call `bb`, then Enter JIRA link and/or text, then create a new branch from.
 
 There are multiple ways to create branch name with Jira and/or text description.
-Currenly new branch is checkouted after creation by default.
-
 ### Interactive
 Just launch without any args. When asked for values, enter them. If name is beautiful for you, create a new branch.
 
 ### Pass arguments
 ```shell
+  -f feature
+        Create `feature/*` branch
+  -h hotfix
+        Create `hotfix/*` branch
   -c true
     	Checkout to new branch (default true (default true)
   -i string
@@ -27,22 +30,23 @@ Just launch without any args. When asked for values, enter them. If name is beau
 Arguments could be passed with keywords or shorthand.
 
 ```shell
-./main -i https://some.jira.cloud/issues/ABC-123 -t Add big button
+./main -f -i https://some.jira.cloud/issues/ABC-123 -t Add big button
 
 # or
-./main https://some.jira.cloud/issues/ABC-123  Add big button
+./main f https://some.jira.cloud/issues/ABC-123  Add big button
 
 # or even
 ./main https://some.jira.cloud/issues/ABC-123
 ```
 
+New branch is checkouted after creation by default.
 
 ## OS support
-Currently only OSX and Unix are supported
+Builds are made for Windows, OSX and Linux by Goreleaser. But code wasn't tested on Linux and Windows.
 
 ## TODO:
 - [ ] Go back, add more text, and other interactive mode impovements
 - [ ] Set autocheckout true/false with interactive mode
-- [ ] Support prefixes like `feature/`
+- [x] Support prefixes like `feature/`
 - [ ] Support other popular issue trackers like YouTrack, Asana, etc
 - [ ] Save screen space in interactive mode by putting hints onto background
