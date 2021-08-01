@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/iamthen0ise/better-branch/branch/stable/graph/badge.svg?token=BTTO7509NG)](https://codecov.io/gh/iamthen0ise/better-branch)
+[![Build & Test](https://github.com/iamthen0ise/better-branch/actions/workflows/test.yml/badge.svg)](https://github.com/iamthen0ise/better-branch/actions/workflows/test.yml)
+
 # bb (better-branch)
 Interactive CLI helper for creating git branches with JIRA Links and some text
 
