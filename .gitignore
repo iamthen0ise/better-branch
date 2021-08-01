@@ -599,3 +599,4 @@ FodyWeavers.xsd
 
 .env
 .goreleaser.yml
+.dist/*
