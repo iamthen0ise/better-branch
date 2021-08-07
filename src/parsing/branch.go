@@ -26,7 +26,7 @@ func (o *GitBranchName) BuildBranchName() {
 	}
 	sb.WriteString(strings.Join(o.CustomTextParts, "-"))
 
-	o.BranchName = sb.String()
+	o.BranchName = strings.ToLower(sb.String())
 }
 
 func (o *GitBranchName) UpdateFields(p string, i string, tp []string) {

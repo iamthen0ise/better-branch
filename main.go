@@ -47,11 +47,9 @@ func main() {
 
 			inputScanner.Scan()
 			text := inputScanner.Text()
-			inputArgs.ParseArg(&text)
+			inputArgs.ParseArgs(strings.Fields(text))
 
-			if inputArgs.IssueID == "" && len(text) > 1 {
-				inputArgs.CustomTextParts = append(inputArgs.CustomTextParts, text)
-			} else if len(text) == 0 {
+			if len(text) == 0 {
 				break
 			}
 			gitBranchName.UpdateFields(inputArgs.Prefix, inputArgs.IssueID, inputArgs.CustomTextParts)
