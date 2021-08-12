@@ -14,8 +14,15 @@ var (
 
 func TestInputRawPrefix(t *testing.T) {
 	var inputArgs = p.InputArgs{}
-	inputArgs.ParseArgs(rawParams)
-	want := "feature"
+	var want string
+	inputArgs.ParseArgs([]string{"f", "branch", "name"})
+	want = "feature"
+	if inputArgs.Prefix != want {
+		t.Errorf("want %v got %v", want, inputArgs.Prefix)
+	}
+
+	inputArgs.ParseArgs([]string{"h", "branch", "name"})
+	want = "hotfix"
 	if inputArgs.Prefix != want {
 		t.Errorf("want %v got %v", want, inputArgs.Prefix)
 	}
@@ -34,7 +41,7 @@ func TestInputRawRenameStrategy(t *testing.T) {
 	inputArgs.ParseArgs(rawParams)
 	want := "Rename"
 	if inputArgs.Strategy != want {
-		t.Errorf("want %v got %v", want, inputArgs.Strategy)
+		t.Errorf("want %v got %v", want, inputArgs.IssueID)
 	}
 }
 
