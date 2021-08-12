@@ -21,6 +21,7 @@ func main() {
 	flag.String("t", "", "Custom Issue Text")
 	flag.Bool("f", false, "Set `feature` prefix")
 	flag.Bool("h", false, "Set `hotfix` prefix")
+	flag.Bool("r", false, "Rename current branch instead of creating new")
 	flag.Bool("c", true, "Checkout to new branch (default `true`")
 	flag.Parse()
 
@@ -56,17 +57,28 @@ func main() {
 		}
 	}
 
-	fmt.Println("Your branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))
-	fmt.Println("Do you want to continue and create branch? [Enter to continue]")
+	fmt.Println("Your new branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))
+	if inputArgs.Strategy == "Rename" {
+		fmt.Println("Do you want to continue and rename current branch ? [Enter to continue]")
+	} else {
+		fmt.Println("Do you want to continue and create branch? [Enter to continue]")
+	}
 
 	scannerCreateBranch := bufio.NewScanner(os.Stdin)
 	scannerCreateBranch.Scan()
 
 	switch strings.ToLower(scannerCreateBranch.Text()) {
 	case "":
-		err := gitBranchName.CreateBranch(true)
-		if err != nil {
-			fmt.Print("Something went wrong,", err.Error())
+		if inputArgs.Strategy == "Rename" {
+			err := gitBranchName.RenameCurrentBranch()
+			if err != nil {
+				fmt.Print("Something went wrong,", err.Error())
+			}
+		} else {
+			err := gitBranchName.CreateBranch(true)
+			if err != nil {
+				fmt.Print("Something went wrong,", err.Error())
+			}
 		}
 	}
 }
