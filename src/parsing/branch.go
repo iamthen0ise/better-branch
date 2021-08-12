@@ -37,6 +37,10 @@ func (o *GitBranchName) UpdateFields(p string, i string, tp []string) {
 }
 
 func (o *GitBranchName) CreateBranch(checkout bool) error {
-	err := git.ExecuteGitCommand(o.BranchName, checkout)
+	err := git.CreateNewBranch(o.BranchName, checkout)
+	return err
+}
+func (o *GitBranchName) RenameCurrentBranch() error {
+	err := git.RenameCurrentBranch(o.BranchName)
 	return err
 }
