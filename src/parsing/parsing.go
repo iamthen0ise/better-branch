@@ -9,7 +9,7 @@ const JiraRe = `([A-Z]+-[\d]+)`
 
 var (
 	RE            = regexp.MustCompile(JiraRe)
-	FlagConstants = []string{"-i", "--i", "-t", "--t", "-c", "--c", "--m", "-m"}
+	FlagConstants = []string{"-i", "--i", "-t", "--t", "-c", "--c"}
 )
 
 type InputArgs struct {

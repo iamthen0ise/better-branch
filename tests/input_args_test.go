@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	rawParams     = []string{"f", "https://jira.atlassian.com/browse/JIRA-123", "fix", "this"}
-	flaggedParams = []string{"-f", "--i", "https://jira.atlassian.com/browse/JIRA-123", "--t", "fix", "this"}
+	rawParams     = []string{"f", "https://jira.atlassian.com/browse/JIRA-123", "fix", "this", "m"}
+	flaggedParams = []string{"-f", "--i", "https://jira.atlassian.com/browse/JIRA-123", "--t", "-m", "fix", "this"}
 )
 
 func TestInputRawPrefix(t *testing.T) {
@@ -26,6 +26,15 @@ func TestInputRawIssueID(t *testing.T) {
 	want := "JIRA-123"
 	if inputArgs.IssueID != want {
 		t.Errorf("want %v got %v", want, inputArgs.IssueID)
+	}
+}
+
+func TestInputRawRenameStrategy(t *testing.T) {
+	var inputArgs = p.InputArgs{}
+	inputArgs.ParseArgs(rawParams)
+	want := "Rename"
+	if inputArgs.Strategy != want {
+		t.Errorf("want %v got %v", want, inputArgs.Strategy)
 	}
 }
 
@@ -52,6 +61,15 @@ func TestInputFlaggedIssueID(t *testing.T) {
 	want := "JIRA-123"
 	if inputArgs.IssueID != want {
 		t.Errorf("want %v got %v", want, inputArgs.IssueID)
+	}
+}
+
+func TestInputRenameStrategyArgs(t *testing.T) {
+	var inputArgs = p.InputArgs{}
+	inputArgs.ParseArgs(flaggedParams)
+	want := "Rename"
+	if inputArgs.Strategy != want {
+		t.Errorf("want %v got %v", want, inputArgs.Strategy)
 	}
 }
 

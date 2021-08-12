@@ -21,7 +21,7 @@ func main() {
 	flag.String("t", "", "Custom Issue Text")
 	flag.Bool("f", false, "Set `feature` prefix")
 	flag.Bool("h", false, "Set `hotfix` prefix")
-	flag.Bool("r", false, "Rename current branch instead of creating new")
+	flag.Bool("m", false, "Rename current branch instead of creating new")
 	flag.Bool("c", true, "Checkout to new branch (default `true`")
 	flag.Parse()
 
