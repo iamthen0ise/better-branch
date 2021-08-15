@@ -9,7 +9,7 @@ import (
 
 var (
 	rawParams     = []string{"f", "https://jira.atlassian.com/browse/JIRA-123", "fix", "this", "m"}
-	flaggedParams = []string{"-f", "--i", "https://jira.atlassian.com/browse/JIRA-123", "--t", "-m", "fix", "this"}
+	flaggedParams = []string{"-f", "--i", "https://jira.atlassian.com/browse/JIRA-123", "--t", "-m", "fix", "this", "-y"}
 )
 
 func TestInputRawPrefix(t *testing.T) {
@@ -60,6 +60,11 @@ func TestInputFlaggedArgs(t *testing.T) {
 	want := "feature"
 	if inputArgs.Prefix != want {
 		t.Errorf("want %v got %v", want, inputArgs.Prefix)
+
+	}
+	wantBool := true
+	if inputArgs.ForceCreate != wantBool {
+		t.Errorf("want %v got %v", want, inputArgs.ForceCreate)
 	}
 }
 func TestInputFlaggedIssueID(t *testing.T) {

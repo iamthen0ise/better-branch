@@ -22,6 +22,7 @@ func main() {
 	flag.Bool("f", false, "Set `feature` prefix")
 	flag.Bool("h", false, "Set `hotfix` prefix")
 	flag.Bool("m", false, "Rename current branch instead of creating new")
+	flag.Bool("y", false, "Create and checkout without confirmation")
 	flag.Bool("c", true, "Checkout to new branch (default `true`")
 	flag.Parse()
 
@@ -57,27 +58,34 @@ func main() {
 		}
 	}
 
-	fmt.Println("Your new branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))
-	if inputArgs.Strategy == "Rename" {
-		fmt.Println("Do you want to continue and rename current branch ? [Enter to continue]")
+	if inputArgs.ForceCreate {
+		err := gitBranchName.CreateBranch(true)
+		if err != nil {
+			fmt.Print("Something went wrong,", err.Error())
+		}
 	} else {
-		fmt.Println("Do you want to continue and create branch? [Enter to continue]")
-	}
-
-	scannerCreateBranch := bufio.NewScanner(os.Stdin)
-	scannerCreateBranch.Scan()
-
-	switch strings.ToLower(scannerCreateBranch.Text()) {
-	case "":
+		fmt.Println("Your new branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))
 		if inputArgs.Strategy == "Rename" {
-			err := gitBranchName.RenameCurrentBranch()
-			if err != nil {
-				fmt.Print("Something went wrong,", err.Error())
-			}
+			fmt.Println("Do you want to continue and rename current branch ? [Enter to continue]")
 		} else {
-			err := gitBranchName.CreateBranch(true)
-			if err != nil {
-				fmt.Print("Something went wrong,", err.Error())
+			fmt.Println("Do you want to continue and create branch? [Enter to continue]")
+		}
+
+		scannerCreateBranch := bufio.NewScanner(os.Stdin)
+		scannerCreateBranch.Scan()
+
+		switch strings.ToLower(scannerCreateBranch.Text()) {
+		case "":
+			if inputArgs.Strategy == "Rename" {
+				err := gitBranchName.RenameCurrentBranch()
+				if err != nil {
+					fmt.Print("Something went wrong,", err.Error())
+				}
+			} else {
+				err := gitBranchName.CreateBranch(true)
+				if err != nil {
+					fmt.Print("Something went wrong,", err.Error())
+				}
 			}
 		}
 	}
