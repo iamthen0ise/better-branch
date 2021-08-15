@@ -17,6 +17,7 @@ type InputArgs struct {
 	IssueID         string
 	CustomTextParts []string
 	Strategy        string
+	ForceCreate     bool
 }
 
 func (a *InputArgs) ParseArg(t *string) {
@@ -36,6 +37,8 @@ func (a *InputArgs) ParseArg(t *string) {
 		a.Prefix = "hotfix"
 	} else if strings.Trim(*t, "-") == "m" {
 		a.Strategy = "Rename"
+	} else if strings.Trim(*t, "-") == "y" {
+		a.ForceCreate = true
 	} else {
 		a.CustomTextParts = append(a.CustomTextParts, *t)
 	}
