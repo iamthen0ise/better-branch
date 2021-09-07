@@ -24,9 +24,9 @@ func (o *GitBranchName) BuildBranchName() {
 	if len(o.IssueID) > 0 && len(o.CustomTextParts) > 0 {
 		sb.WriteString("-")
 	}
-	sb.WriteString(strings.Join(o.CustomTextParts, "-"))
+	sb.WriteString(strings.ToLower(strings.Join(o.CustomTextParts, "-")))
 
-	o.BranchName = strings.ToLower(sb.String())
+	o.BranchName = sb.String()
 }
 
 func (o *GitBranchName) UpdateFields(p string, i string, tp []string) {
