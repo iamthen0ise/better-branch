@@ -35,6 +35,10 @@ func (a *InputArgs) ParseArg(t *string) {
 		a.Prefix = "feature"
 	} else if strings.Trim(*t, "-") == "h" {
 		a.Prefix = "hotfix"
+	} else if strings.Trim(*t, "-") == "b" {
+		a.Prefix = "bugfix"
+	} else if strings.Trim(*t, "-") == "r" {
+		a.Prefix = "release"
 	} else if strings.Trim(*t, "-") == "m" {
 		a.Strategy = "Rename"
 	} else if strings.Trim(*t, "-") == "y" {

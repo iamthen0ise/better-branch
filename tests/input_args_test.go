@@ -15,6 +15,7 @@ var (
 func TestInputRawPrefix(t *testing.T) {
 	var inputArgs = p.InputArgs{}
 	var want string
+
 	inputArgs.ParseArgs([]string{"f", "branch", "name"})
 	want = "feature"
 	if inputArgs.Prefix != want {
@@ -23,6 +24,18 @@ func TestInputRawPrefix(t *testing.T) {
 
 	inputArgs.ParseArgs([]string{"h", "branch", "name"})
 	want = "hotfix"
+	if inputArgs.Prefix != want {
+		t.Errorf("want %v got %v", want, inputArgs.Prefix)
+	}
+
+	inputArgs.ParseArgs([]string{"b", "branch", "name"})
+	want = "bugfix"
+	if inputArgs.Prefix != want {
+		t.Errorf("want %v got %v", want, inputArgs.Prefix)
+	}
+
+	inputArgs.ParseArgs([]string{"r", "branch", "name"})
+	want = "release"
 	if inputArgs.Prefix != want {
 		t.Errorf("want %v got %v", want, inputArgs.Prefix)
 	}
