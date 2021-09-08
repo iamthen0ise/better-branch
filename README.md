@@ -7,6 +7,16 @@ Interactive CLI helper for creating git branches with JIRA Links and some text
 ## Still in development?
 Yes
 
+## How to install?
+`bb` do not use any 3rd party packages, so just build a binary:
+```shell
+go build
+```
+Then move binary `bb` in some convient place, and add it to your PATH:
+```shell
+PATH=<path to bb>:$PATH
+```
+
 ## How it works?
 [![asciicast](https://asciinema.org/a/d4NPyH679pdgjJVfLQpV4SOf7.svg)](https://asciinema.org/a/d4NPyH679pdgjJVfLQpV4SOf7)
 This tiny utility was made when i completely bored of creating JIRA branches on Web interface and pulling it to local.
@@ -19,27 +29,31 @@ Just launch without any args. When asked for values, enter them. If name is beau
 
 ### Pass arguments
 ```shell
-  -f feature
+  -f 
         Create `feature/*` branch
-  -h hotfix
+  -h
         Create `hotfix/*` branch
-  -c true
+  -b
+        Create `bugfix/*` branch
+  -r
+        Create `release/*` branch
+  -c
     	Checkout to new branch (default true (default true)
-  -i string
+  -i
     	JIRA Link or issue
-  -t string
+  -t
     	Custom Issue Text
 ```
 Arguments could be passed with keywords or shorthand.
 
 ```shell
-./main -f -i https://some.jira.cloud/issues/ABC-123 -t Add big button
+bb -f -i https://some.jira.cloud/issues/ABC-123 -t Add big button
 
 # or
-./main f https://some.jira.cloud/issues/ABC-123  Add big button
+bb f https://some.jira.cloud/issues/ABC-123  Add big button
 
 # or even
-./main https://some.jira.cloud/issues/ABC-123
+bb https://some.jira.cloud/issues/ABC-123
 ```
 
 New branch is checkouted after creation by default.
