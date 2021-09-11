@@ -61,7 +61,7 @@ func main() {
 	if inputArgs.ForceCreate {
 		err := gitBranchName.CreateBranch(true)
 		if err != nil {
-			fmt.Print("Something went wrong,", err.Error())
+			fmt.Print("Can't create new branch,", err.Error())
 		}
 	} else {
 		fmt.Println("Your new branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))
@@ -79,12 +79,12 @@ func main() {
 			if inputArgs.Strategy == "Rename" {
 				err := gitBranchName.RenameCurrentBranch()
 				if err != nil {
-					fmt.Print("Something went wrong,", err.Error())
+					fmt.Print("Can't rename current branch,", err.Error())
 				}
 			} else {
 				err := gitBranchName.CreateBranch(true)
 				if err != nil {
-					fmt.Print("Something went wrong,", err.Error())
+					fmt.Print("Can't create new branch,", err.Error())
 				}
 			}
 		}
