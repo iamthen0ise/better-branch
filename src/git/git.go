@@ -30,3 +30,10 @@ func RenameCurrentBranch(newBranchName string) error {
 
 	return err
 }
+
+func CommitChanges(messagePrefix string, messageText string) error {
+	cmd := exec.Command("git", "commit", "-m", strings.Join([]string{messagePrefix, messageText}, "."))
+	_, err := cmd.Output()
+
+	return err
+}

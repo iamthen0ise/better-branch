@@ -23,6 +23,7 @@ func main() {
 	flag.Bool("h", false, "Set `hotfix` prefix")
 	flag.Bool("m", false, "Rename current branch instead of creating new")
 	flag.Bool("y", false, "Create and checkout without confirmation")
+	flag.Bool("commit", false, "Commit changes with prefixed message from branch name (default `false`")
 	flag.Bool("c", true, "Checkout to new branch (default `true`")
 	flag.Parse()
 
@@ -65,6 +66,7 @@ func main() {
 		}
 	} else {
 		fmt.Println("Your new branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))
+
 		if inputArgs.Strategy == "Rename" {
 			fmt.Println("Do you want to continue and rename current branch ? [Enter to continue]")
 		} else {

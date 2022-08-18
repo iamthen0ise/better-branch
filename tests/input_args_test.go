@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	rawParams     = []string{"f", "https://jira.atlassian.com/browse/JIRA-123", "fix", "this", "m"}
-	flaggedParams = []string{"-f", "--i", "https://jira.atlassian.com/browse/JIRA-123", "--t", "-m", "fix", "this", "-y"}
+	jiraRawParams   = []string{"f", "https://jira.atlassian.com/browse/JIRA-123", "fix", "this", "m"}
+	kaitenRawParams = []string{"f", "https://example.kaiten.ru/123456", "add", "more", "code"}
+	flaggedParams   = []string{"-f", "--i", "https://jira.atlassian.com/browse/JIRA-123", "--t", "-m", "fix", "this", "-y"}
 )
 
 func TestInputRawPrefix(t *testing.T) {
@@ -40,10 +41,19 @@ func TestInputRawPrefix(t *testing.T) {
 		t.Errorf("want %v got %v", want, inputArgs.Prefix)
 	}
 }
-func TestInputRawIssueID(t *testing.T) {
+func TestInputRawJira(t *testing.T) {
 	var inputArgs = p.InputArgs{}
-	inputArgs.ParseArgs(rawParams)
+	inputArgs.ParseArgs(jiraRawParams)
 	want := "JIRA-123"
+	if inputArgs.IssueID != want {
+		t.Errorf("want %v got %v", want, inputArgs.IssueID)
+	}
+}
+
+func TestInputRawKaiten(t *testing.T) {
+	var inputArgs = p.InputArgs{}
+	inputArgs.ParseArgs(kaitenRawParams)
+	want := "KAITEN-123456"
 	if inputArgs.IssueID != want {
 		t.Errorf("want %v got %v", want, inputArgs.IssueID)
 	}
@@ -51,7 +61,7 @@ func TestInputRawIssueID(t *testing.T) {
 
 func TestInputRawRenameStrategy(t *testing.T) {
 	var inputArgs = p.InputArgs{}
-	inputArgs.ParseArgs(rawParams)
+	inputArgs.ParseArgs(jiraRawParams)
 	want := "Rename"
 	if inputArgs.Strategy != want {
 		t.Errorf("want %v got %v", want, inputArgs.IssueID)
@@ -60,7 +70,7 @@ func TestInputRawRenameStrategy(t *testing.T) {
 
 func TestInputRawCustomTextParts(t *testing.T) {
 	var inputArgs = p.InputArgs{}
-	inputArgs.ParseArgs(rawParams)
+	inputArgs.ParseArgs(jiraRawParams)
 	if len(inputArgs.CustomTextParts) < 1 {
 		t.Error("customTextParts is empty")
 	}
