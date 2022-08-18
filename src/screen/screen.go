@@ -10,7 +10,6 @@ const (
 
 	Magenta = "\u001b[36m"
 	Yellow  = "\u001b[33m"
-	//BRIGHT_BLACK = "\u001b[30;1m"
 )
 
 func Colorize(text *string, color string) string {

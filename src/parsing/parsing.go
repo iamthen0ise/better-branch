@@ -6,10 +6,12 @@ import (
 )
 
 const JiraRe = `([A-Z]+-[\d]+)`
+const KaitenRe = `(KAITEN.(RU|COM)\/[\d]+)`
 
 var (
-	RE            = regexp.MustCompile(JiraRe)
-	FlagConstants = []string{"-i", "--i", "-t", "--t", "-c", "--c"}
+	JiraReCompiled   = regexp.MustCompile(JiraRe)
+	KaitenReCompiled = regexp.MustCompile(KaitenRe)
+	FlagConstants    = []string{"-i", "--i", "-t", "--t", "-c", "--c"}
 )
 
 type InputArgs struct {
@@ -27,10 +29,23 @@ func (a *InputArgs) ParseArg(t *string) {
 		}
 	}
 
-	var issuerIdMatches = RE.FindAllString(strings.ToUpper(*t), -1)
+	var jiraMatches = JiraReCompiled.FindAllString(strings.ToUpper(*t), -1)
+	var kaitenMatches = KaitenReCompiled.FindAllString(strings.ToUpper(*t), -1)
 
-	if len(issuerIdMatches) > 0 {
-		a.IssueID = issuerIdMatches[0]
+	var issueIdMatches string
+
+	if len(jiraMatches) > 0 {
+		issueIdMatches = jiraMatches[0]
+	} else if len(kaitenMatches) > 0 {
+		issueIdMatches = strings.Replace(kaitenMatches[0], "/", "-", -1)
+		issueIdMatches = strings.Replace(issueIdMatches, ".RU", "", -1)
+		issueIdMatches = strings.Replace(issueIdMatches, ".COM", "", -1)
+	} else {
+		issueIdMatches = ""
+	}
+
+	if len(issueIdMatches) > 0 {
+		a.IssueID = issueIdMatches
 	} else if strings.Trim(*t, "-") == "f" {
 		a.Prefix = "feature"
 	} else if strings.Trim(*t, "-") == "h" {
