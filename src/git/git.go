@@ -8,17 +8,14 @@ import (
 func CreateNewBranch(branchName string, checkout bool) error {
 	app := "git"
 
-	var subcommand string
 	var args []string
-
 	if checkout {
-		subcommand = "checkout"
-		args = append(args, "-b")
+		args = append(args, "checkout", "-b", branchName)
 	} else {
-		subcommand = "branch"
+		args = append(args, "branch", branchName)
 	}
 
-	cmd := exec.Command(app, subcommand, strings.Join(args, " "), branchName)
+	cmd := exec.Command(app, args...)
 	_, err := cmd.Output()
 
 	return err
