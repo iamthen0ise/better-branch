@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	g "github.io/iamthen0ise/bb/src/git"
 	p "github.io/iamthen0ise/bb/src/parsing"
 	s "github.io/iamthen0ise/bb/src/screen"
 )
@@ -19,11 +20,11 @@ func main() {
 
 	flag.String("i", "", "JIRA Link or issue")
 	flag.String("t", "", "Custom Issue Text")
-	flag.Bool("f", false, "Set `feature` prefix")
-	flag.Bool("h", false, "Set `hotfix` prefix")
+	flag.Bool("f", false, "Set `feature/` prefix")
+	flag.Bool("h", false, "Set `hotfix/` prefix")
 	flag.Bool("m", false, "Rename current branch instead of creating new")
 	flag.Bool("y", false, "Create and checkout without confirmation")
-	flag.Bool("commit", false, "Commit changes with prefixed message from branch name (default `false`")
+	flag.String("commit", "", "Commit changes with prefixed message from branch name (default `false`")
 	flag.Bool("c", true, "Checkout to new branch (default `true`")
 	flag.Parse()
 
@@ -63,6 +64,11 @@ func main() {
 		err := gitBranchName.CreateBranch(true)
 		if err != nil {
 			fmt.Print("Can't create new branch,", err.Error())
+		}
+	} else if inputArgs.Strategy == "Commit" {
+		err := g.CommitChanges(inputArgs.IssueID, inputArgs.CustomTextParts)
+		if err != nil {
+			fmt.Print("Can't commit. Try `git` directly,", err.Error())
 		}
 	} else {
 		fmt.Println("Your new branch name is:", s.Colorize(&gitBranchName.BranchName, s.Magenta))

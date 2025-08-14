@@ -58,6 +58,8 @@ func (a *InputArgs) ParseArg(t *string) {
 		a.Strategy = "Rename"
 	} else if strings.Trim(*t, "-") == "y" {
 		a.ForceCreate = true
+	} else if strings.Trim(*t, "-") == "commit" {
+		a.Strategy = "Commit"
 	} else {
 		a.CustomTextParts = append(a.CustomTextParts, *t)
 	}
